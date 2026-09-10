@@ -4,8 +4,8 @@
 format: jb-book
 root: intro
 chapters:
-- file: Tugas1
-- file: Tugas2
+- file: tugas1
+- file: tugas2
 # - file: dataUnderstanding
 #   sections:
 #     - file: explorasiData
