@@ -6,6 +6,7 @@ root: intro
 chapters:
 - file: Tugas1
 - file: Tugas2
+- file: Tugas3
 # - file: dataUnderstanding
 #   sections:
 #     - file: explorasiData
