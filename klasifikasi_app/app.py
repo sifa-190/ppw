@@ -39,13 +39,30 @@ if not _berjalan_di_streamlit:
 st.set_page_config(page_title="Klasifikasi Berita", page_icon="📰", layout="centered")
 
 
-# ----------------------------------------------------------------------
-# 1. PREPROCESSING (HARUS SAMA PERSIS DENGAN YANG DIPAKAI SAAT LATIH MODEL)
+# ======================================================================
+# 1. CRAWLING : AMBIL BERITA DARI LINK
+# ======================================================================
+def ambil_berita(url):
+    """Kembalikan (judul, isi) dari URL. Raise ValueError jika gagal."""
+    # trafilatura = library untuk mengambil teks berita dari halaman web
+    html = trafilatura.fetch_url(url)        # download HTML halaman
+    if not html:
+        raise ValueError("Halaman tidak dapat diunduh (cek link/koneksi internet).")
+    isi = trafilatura.extract(html)          # ambil isi artikelnya saja (tanpa iklan/menu)
+    if not isi:
+        raise ValueError("Isi berita tidak berhasil diekstrak dari halaman ini.")
+    meta = trafilatura.extract_metadata(html)  # ambil info halaman, dipakai untuk judul
+    judul = (meta.title if meta and meta.title else "") or ""
+    return judul.strip(), isi.strip()
+
+
+# ======================================================================
+# 2. PREPROCESSING (HARUS SAMA PERSIS DENGAN YANG DIPAKAI SAAT LATIH MODEL)
 #    - Skip-gram : cleansing + case folding + tokenisasi
 #                  (TANPA stopword removal dan TANPA stemming)
 #    - TF-IDF    : cleansing + case folding + tokenisasi
 #                  + stopword removal + stemming
-# ----------------------------------------------------------------------
+# ======================================================================
 @st.cache_resource(show_spinner="Menyiapkan stopword dan stemmer...")
 def siapkan_nlp():
     """Hanya dipanggil pada jalur TF-IDF, jadi jalur Skip-gram tidak butuh NLTK/Sastrawi."""
@@ -56,9 +73,9 @@ def siapkan_nlp():
     nltk.download("stopwords", quiet=True)
     stop = set(stopwords.words("indonesian")).union(set(stopwords.words("english")))
     stop |= {
-        'dan','atau','yang','dengan','juga','karena','namun','sehingga','adalah','akan',
-        'saat','pada','untuk','dari','oleh','dalam','dapat','kami','mereka','kita','saya',
-        'ini','itu','tersebut','tsb','dll','dkk','spt','yg','dgn','dr','jr','sr','thn',
+        'dan','atau','uk','dari','oleh','dalam','dapat','kami','mereka','kita','saya',
+        'ini','itu','tersebuyang','dengan','juga','karena','namun','sehingga','adalah','akan',
+        'saat','pada','untt','tsb','dll','dkk','spt','yg','dgn','dr','jr','sr','thn',
         'tdk','gak','nggak','ya','ia','terkait','berdasarkan','setelah','sebelum',
         'sambil','selain','sekitar','hingga','maupun','bisa','per','waktu','apakah','adanya'
     }
@@ -94,9 +111,9 @@ def praproses_skipgram(text):
     return bersihkan_teks(text, hapus_stopword=False, stemming=False)
 
 
-# ----------------------------------------------------------------------
-# 2. MEMUAT MODEL
-# ----------------------------------------------------------------------
+# ======================================================================
+# 3. MODELING : MEMUAT MODEL & REPRESENTASI VEKTOR
+# ======================================================================
 def _is_classifier(o):
     return (hasattr(o, "predict_proba") and hasattr(o, "classes_")) or hasattr(o, "steps")
 
@@ -162,25 +179,9 @@ def doc_vector(tokens, wv):
     return np.mean(vecs, axis=0)
 
 
-# ----------------------------------------------------------------------
-# 3. AMBIL BERITA DARI LINK
-# ----------------------------------------------------------------------
-def ambil_berita(url):
-    """Kembalikan (judul, isi) dari URL. Raise ValueError jika gagal."""
-    html = trafilatura.fetch_url(url)
-    if not html:
-        raise ValueError("Halaman tidak dapat diunduh (cek link/koneksi internet).")
-    isi = trafilatura.extract(html)
-    if not isi:
-        raise ValueError("Isi berita tidak berhasil diekstrak dari halaman ini.")
-    meta = trafilatura.extract_metadata(html)
-    judul = (meta.title if meta and meta.title else "") or ""
-    return judul.strip(), isi.strip()
-
-
-# ----------------------------------------------------------------------
+# ======================================================================
 # 4. KLASIFIKASI
-# ----------------------------------------------------------------------
+# ======================================================================
 def _susun_hasil(clf, vec, teks_bersih, tokens, dikenal, keterangan):
     proba = clf.predict_proba(vec)[0]
     kelas = list(clf.classes_)
@@ -224,9 +225,9 @@ def klasifikasi(judul, isi, metode, komponen):
     return klasifikasi_skipgram(teks, komponen["clf"], komponen["wv"])
 
 
-# ----------------------------------------------------------------------
+# ======================================================================
 # 5. ANTARMUKA
-# ----------------------------------------------------------------------
+# ======================================================================
 st.title("📰 Klasifikasi Berita Detik.com")
 
 with st.sidebar:
