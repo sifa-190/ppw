@@ -73,15 +73,18 @@ class Crawler:
             self._robots[base] = rp
         return self._robots[base].can_fetch(HEADERS["User-Agent"], url)
 
-    def crawl(self, seed_url: str, progress_cb=None) -> CrawlResult:
-        seed = normalize_url(seed_url)
-        if seed is None:
+    def crawl(self, seed_urls, progress_cb=None) -> CrawlResult:
+        """seed_urls: satu URL (str) atau daftar URL."""
+        if isinstance(seed_urls, str):
+            seed_urls = [seed_urls]
+        seeds = [s for s in (normalize_url(u) for u in seed_urls) if s]
+        if not seeds:
             raise ValueError("URL tidak valid (harus diawali http:// atau https://)")
 
         result = CrawlResult()
         start = time.time()
-        queue = deque([(seed, 0)])
-        queued = {seed}
+        queue = deque((s, 0) for s in dict.fromkeys(seeds))
+        queued = set(seeds)
         per_domain = Counter()
 
         while queue:

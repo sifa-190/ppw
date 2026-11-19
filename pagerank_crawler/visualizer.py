@@ -4,6 +4,7 @@ import math
 from pyvis.network import Network
 
 SEED_COLOR = "#fb7185"  # koral
+# gradasi PageRank rendah -> tinggi: cyan -> teal -> lime -> emas
 STOPS = [(0.0, "#22d3ee"), (0.35, "#2dd4bf"), (0.7, "#a3e635"), (1.0, "#fbbf24")]
 
 
@@ -24,16 +25,17 @@ def score_color(t):
 
 
 def build_graph_html(edges, scores, seed=None, top_n=40, height="680px"):
+    """seed: satu nama website atau kumpulan nama website (titik awal crawling)."""
+    seeds = {seed} if isinstance(seed, str) else set(seed or [])
     ranked = sorted(scores, key=scores.get, reverse=True)
     visible = set(ranked[:top_n])
-    if seed in scores:
-        visible.add(seed)
+    visible |= {s for s in seeds if s in scores}
     sub = {e: w for e, w in edges.items() if e[0] in visible and e[1] in visible}
 
     vals = [scores[n] for n in visible]
     lo, hi = min(vals), max(vals)
 
-    net = Network(height=height, width="100%", directed=True, bgcolor="#0b1020",
+    net = Network(height=height, width="100%", directed=True, bgcolor="#07110f",
                   font_color="#e2e8f0", notebook=False, cdn_resources="in_line")
 
     for node in visible:
@@ -41,7 +43,7 @@ def build_graph_html(edges, scores, seed=None, top_n=40, height="680px"):
         t = t ** 0.6  # perhalus agar variasi warna terlihat
         size = 12 + 38 * t
         color = score_color(t)
-        if node == seed:
+        if node in seeds:
             color, size = SEED_COLOR, max(size, 26)
         label = node if len(node) <= 28 else node[:25] + "..."
         net.add_node(node, label=label, size=size, color=color, borderWidth=0,
@@ -49,7 +51,7 @@ def build_graph_html(edges, scores, seed=None, top_n=40, height="680px"):
 
     for (s, d), w in sub.items():
         net.add_edge(s, d, arrows="to", width=min(1 + math.log(w), 5),
-                     color={"color": "rgba(148,163,184,0.35)", "highlight": "#f472b6"},
+                     color={"color": "rgba(148,163,184,0.35)", "highlight": "#fbbf24"},
                      title=f"{s} → {d}<br>{w} tautan")
 
     net.set_options("""

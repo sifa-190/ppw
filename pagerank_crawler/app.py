@@ -11,6 +11,7 @@ import streamlit.components.v1 as components
 from crawler import Crawler, get_domain, normalize_url
 from pagerank_utils import (aggregate_to_domain, build_ranking_table, domain_texts,
                             pagerank, related_websites)
+from search import find_seeds
 from visualizer import build_graph_html
 
 st.set_page_config(page_title="Web Crawler & PageRank", page_icon="🕸️", layout="wide")
@@ -67,20 +68,38 @@ with st.sidebar:
 # ---------------- Input ----------------
 with st.form("input_form"):
     c1, c2, c3 = st.columns([3, 3, 1])
-    seed_url = c1.text_input("Link website", placeholder="https://www.contoh.ac.id/",
+    seed_url = c1.text_input("Link website", placeholder="Link website (opsional jika judul diisi)",
                              label_visibility="collapsed")
-    paper_title = c2.text_input("Judul paper", placeholder="Judul paper (untuk skor relevansi)",
+    paper_title = c2.text_input("Judul paper", placeholder="Judul paper (opsional jika link diisi)",
                                 label_visibility="collapsed")
     submitted = c3.form_submit_button("Analisis", use_container_width=True)
-st.caption("Contoh: `https://www.wikipedia.org` · `https://news.ycombinator.com` · `https://github.com`")
+st.caption("Isi **salah satu atau keduanya**. Link saja: crawl dari website itu. "
+           "Judul saja: website awal dicari otomatis. Keduanya: crawl dari link, judul untuk skor relevansi. "
+           "Contoh link: `https://www.wikipedia.org`")
 
 if submitted:
     url = seed_url.strip()
-    if url and not url.startswith(("http://", "https://")):
-        url = "https://" + url
-    if not url or normalize_url(url) is None:
-        st.error("Masukkan link website yang valid, misalnya https://www.contoh.ac.id/")
+    title_in = paper_title.strip()
+    if not url and not title_in:
+        st.error("Isi link website, judul paper, atau keduanya.")
         st.stop()
+
+    seeds, source = [], ""
+    if url:
+        if not url.startswith(("http://", "https://")):
+            url = "https://" + url
+        if normalize_url(url) is None:
+            st.error("Link website tidak valid, contoh: https://www.contoh.ac.id/")
+            st.stop()
+        seeds = [normalize_url(url)]
+    else:
+        with st.spinner("Mencari website awal dari judul paper..."):
+            seeds, source = find_seeds(title_in)
+        if not seeds:
+            st.error("Website dari judul paper tidak ditemukan (layanan pencarian tidak dapat dijangkau "
+                     "atau tanpa hasil). Isi kolom link website secara manual.")
+            st.stop()
+        st.success(f"Website awal ditemukan lewat {source}: " + ", ".join(get_domain(s) for s in seeds))
 
     bar = st.progress(0.0, text="Memulai crawling...")
 
@@ -90,7 +109,7 @@ if submitted:
     crawler = Crawler(max_depth=max_depth, max_pages=max_pages, max_pages_per_domain=per_domain,
                       delay=delay, time_limit=time_limit, respect_robots=respect_robots)
     try:
-        result = crawler.crawl(url, progress_cb=on_progress)
+        result = crawler.crawl(seeds, progress_cb=on_progress)
     except ValueError as e:
         bar.empty()
         st.error(str(e))
@@ -98,16 +117,17 @@ if submitted:
     bar.empty()
 
     st.session_state["result"] = result
-    st.session_state["seed"] = normalize_url(url)
-    st.session_state["title"] = paper_title.strip()
+    st.session_state["seeds"] = seeds
+    st.session_state["title"] = title_in
 
 if "result" not in st.session_state:
-    st.info("Masukkan link website dan judul paper, lalu klik **Analisis**.")
+    st.info("Masukkan link website atau judul paper (atau keduanya), lalu klik **Analisis**.")
     st.stop()
 
 # ---------------- Analisis ----------------
 result = st.session_state["result"]
-seed_node = get_domain(st.session_state["seed"])
+seed_nodes = [get_domain(s) for s in st.session_state["seeds"]]
+seed_node = seed_nodes[0]
 title = st.session_state["title"]
 
 edges = aggregate_to_domain(result.edges)
@@ -148,7 +168,7 @@ with tab_graph:
                           5, min(100, n_nodes), min(40, n_nodes))
     else:
         top_n = n_nodes
-    graph_html = build_graph_html(edges, scores, seed=seed_node, top_n=top_n)
+    graph_html = build_graph_html(edges, scores, seed=set(seed_nodes), top_n=top_n)
     components.html(graph_html, height=700, scrolling=False)
     st.markdown(
         '<div class="legend"><span class="dot"></span>website awal · warna '
