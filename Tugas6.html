@@ -1,0 +1,1633 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Web Crawling dan Analisis PageRank (Web Structure Mining) &#8212; Pencarian &amp; Penambangan Web</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=6a604523" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Tugas6';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Implementasi Graf Berarah, Tidak Berarah, dan Analisis Metrik" href="Tugas5.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/profil.jpeg" class="logo__image only-light" alt="Pencarian & Penambangan Web - Home"/>
+    <img src="_static/profil.jpeg" class="logo__image only-dark pst-js-only" alt="Pencarian & Penambangan Web - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Profil Saya
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Tugas1.html">Pengantar Web Mining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tugas2.html">Crawling Data Detik.com</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tugas3.html">Prapemrosesan Teks dan Ekstraksi Fitur TF-IDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tugas4.html">Klasifikasi Berita Detik.com (SPORT dan FINANCE)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tugas5.html">Implementasi Graf Berarah, Tidak Berarah, dan Analisis Metrik</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Web Crawling dan Analisis PageRank (Web Structure Mining)</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FTugas6.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Tugas6.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Web Crawling dan Analisis PageRank (Web Structure Mining)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#landasan-teori-web-structure-mining-algoritma-pagerank">1. Landasan Teori: Web Structure Mining &amp; Algoritma PageRank</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-lingkungan-pustaka">2. Persiapan Lingkungan &amp; Pustaka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-web-crawler-rekursif-breadth-first-search">3. Implementasi Web Crawler Rekursif (Breadth-First Search)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksekusi-crawling-pada-website-target">4. Eksekusi Crawling pada Website Target</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-topologi-graf-terarah-directed-graph">5. Pemodelan Topologi Graf Terarah (<em>Directed Graph</em>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-algoritma-pagerank-from-scratch-power-iteration">6. Implementasi Algoritma PageRank <em>From Scratch</em> (Power Iteration)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validasi-dan-komparasi-dengan-networkx">7. Validasi dan Komparasi dengan NetworkX</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-graf-jaringan-web">8. Visualisasi Graf Jaringan Web</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-hasil-peringkat-website-terpenting">9. Analisis Hasil &amp; Peringkat Website Terpenting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-dan-deployment-aplikasi-interaktif-app-py">10. Persiapan dan Deployment Aplikasi Interaktif (<code class="docutils literal notranslate"><span class="pre">app.py</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-menjalankan-aplikasi-di-lokal">Cara Menjalankan Aplikasi di Lokal</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-menjalankan-aplikasi-di-server-warga-laboratorium">Cara Menjalankan Aplikasi di Server Warga Laboratorium</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="web-crawling-dan-analisis-pagerank-web-structure-mining">
+<h1>Web Crawling dan Analisis PageRank (Web Structure Mining)<a class="headerlink" href="#web-crawling-dan-analisis-pagerank-web-structure-mining" title="Link to this heading">#</a></h1>
+<p><strong>Mata kuliah:</strong> Pencarian &amp; Penambangan Web</p>
+<p>Notebook ini membangun sistem yang (1) <em>meng-crawl</em> sebuah website dan mengekstraksi tautannya secara berulang,
+(2) memodelkan hubungan antarwebsite sebagai <strong>graf berarah</strong>, (3) menghitung <strong>PageRank</strong> dengan <em>power iteration</em>,
+lalu (4) menentukan website dengan tingkat kepentingan tertinggi. Hasilnya juga tersedia sebagai aplikasi interaktif (<code class="docutils literal notranslate"><span class="pre">app.py</span></code>).</p>
+<section id="landasan-teori-web-structure-mining-algoritma-pagerank">
+<h2>1. Landasan Teori: Web Structure Mining &amp; Algoritma PageRank<a class="headerlink" href="#landasan-teori-web-structure-mining-algoritma-pagerank" title="Link to this heading">#</a></h2>
+<p><strong>Web Structure Mining</strong> menganalisis struktur tautan (<em>hyperlink</em>) antarhalaman untuk menemukan pola, misalnya halaman
+mana yang menjadi pusat rujukan. Web dimodelkan sebagai graf berarah <span class="math notranslate nohighlight">\(G=(V,E)\)</span>: tiap halaman/website adalah simpul
+(<em>node</em>) dan tiap tautan dari A ke B adalah sisi berarah <span class="math notranslate nohighlight">\(A \rightarrow B\)</span>.</p>
+<p><strong>PageRank</strong> menilai kepentingan sebuah simpul dari banyaknya tautan masuk dan dari seberapa penting simpul yang menautkannya.
+Intuisinya: seorang <em>random surfer</em> mengikuti tautan secara acak, sesekali melompat ke halaman acak. PageRank adalah
+peluang surfer berada di suatu halaman dalam jangka panjang:</p>
+<div class="math notranslate nohighlight">
+\[PR(i) = \frac{1-d}{N} + d \left( \sum_{j \rightarrow i} PR(j)\,\frac{w_{ji}}{W_j} + \frac{1}{N}\sum_{k \in D} PR(k) \right)\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(d\)</span> : <em>damping factor</em> (umumnya 0,85) — peluang surfer mengikuti tautan.</p></li>
+<li><p><span class="math notranslate nohighlight">\(N\)</span> : jumlah simpul.</p></li>
+<li><p><span class="math notranslate nohighlight">\(w_{ji}\)</span> : bobot tautan <span class="math notranslate nohighlight">\(j \rightarrow i\)</span> (jumlah tautan), <span class="math notranslate nohighlight">\(W_j=\sum_i w_{ji}\)</span> : total bobot keluar dari <span class="math notranslate nohighlight">\(j\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(D\)</span> : simpul <em>dangling</em> (tanpa tautan keluar), skornya dibagi rata ke semua simpul.</p></li>
+</ul>
+<p>Nilai PageRank dihitung berulang (<strong>power iteration</strong>) sampai selisih antariterasi sangat kecil (konvergen).</p>
+</section>
+<section id="persiapan-lingkungan-pustaka">
+<h2>2. Persiapan Lingkungan &amp; Pustaka<a class="headerlink" href="#persiapan-lingkungan-pustaka" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pasang library bila belum ada (hapus tanda # lalu jalankan):</span>
+<span class="c1"># !pip install requests beautifulsoup4 networkx numpy pandas matplotlib scipy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">deque</span><span class="p">,</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.parse</span><span class="w"> </span><span class="kn">import</span> <span class="n">urljoin</span><span class="p">,</span> <span class="n">urldefrag</span><span class="p">,</span> <span class="n">urlparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib.robotparser</span><span class="w"> </span><span class="kn">import</span> <span class="n">RobotFileParser</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearSegmentedColormap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">"display.float_format"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Library siap digunakan."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Library siap digunakan.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="implementasi-web-crawler-rekursif-breadth-first-search">
+<h2>3. Implementasi Web Crawler Rekursif (Breadth-First Search)<a class="headerlink" href="#implementasi-web-crawler-rekursif-breadth-first-search" title="Link to this heading">#</a></h2>
+<p>Crawler memakai antrean <strong>BFS</strong>: halaman seed dikunjungi lebih dulu (kedalaman 0), lalu semua tautannya (kedalaman 1), dan seterusnya
+sampai batas kedalaman. Beberapa batasan menjaga crawling tetap sopan dan terkendali:</p>
+<ul class="simple">
+<li><p>batas kedalaman, total halaman, dan halaman per website (agar tidak habis di satu situs),</p></li>
+<li><p>jeda antar request dan batas waktu,</p></li>
+<li><p>kepatuhan pada <code class="docutils literal notranslate"><span class="pre">robots.txt</span></code>,</p></li>
+<li><p>hanya memproses halaman HTML (file gambar, PDF, dsb. dilewati).</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HEADERS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"User-Agent"</span><span class="p">:</span> <span class="s2">"PPW-LabCrawler/1.0 (tugas kuliah Pencarian &amp; Penambangan Web)"</span><span class="p">}</span>
+<span class="n">SKIP_EXT</span> <span class="o">=</span> <span class="p">(</span><span class="s2">".pdf"</span><span class="p">,</span> <span class="s2">".jpg"</span><span class="p">,</span> <span class="s2">".jpeg"</span><span class="p">,</span> <span class="s2">".png"</span><span class="p">,</span> <span class="s2">".gif"</span><span class="p">,</span> <span class="s2">".svg"</span><span class="p">,</span> <span class="s2">".webp"</span><span class="p">,</span> <span class="s2">".ico"</span><span class="p">,</span> <span class="s2">".zip"</span><span class="p">,</span> <span class="s2">".rar"</span><span class="p">,</span> <span class="s2">".gz"</span><span class="p">,</span>
+            <span class="s2">".mp3"</span><span class="p">,</span> <span class="s2">".mp4"</span><span class="p">,</span> <span class="s2">".avi"</span><span class="p">,</span> <span class="s2">".mov"</span><span class="p">,</span> <span class="s2">".doc"</span><span class="p">,</span> <span class="s2">".docx"</span><span class="p">,</span> <span class="s2">".xls"</span><span class="p">,</span> <span class="s2">".xlsx"</span><span class="p">,</span> <span class="s2">".ppt"</span><span class="p">,</span> <span class="s2">".pptx"</span><span class="p">,</span>
+            <span class="s2">".css"</span><span class="p">,</span> <span class="s2">".js"</span><span class="p">,</span> <span class="s2">".xml"</span><span class="p">,</span> <span class="s2">".json"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Buang fragment (#...), rapikan trailing slash, hanya http/https, lewati file non-HTML."""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">url</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">urldefrag</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"http"</span><span class="p">,</span> <span class="s2">"https"</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">netloc</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">path</span> <span class="ow">or</span> <span class="s2">"/"</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="o">!=</span> <span class="s2">"/"</span> <span class="ow">and</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"/"</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">SKIP_EXT</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">_replace</span><span class="p">(</span><span class="n">netloc</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">netloc</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">fragment</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">geturl</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_domain</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">netloc</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="s2">"www."</span><span class="p">)</span>
+
+
+<span class="n">_robots</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">allowed_by_robots</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">netloc</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">if</span> <span class="n">base</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_robots</span><span class="p">:</span>
+        <span class="n">rp</span> <span class="o">=</span> <span class="n">RobotFileParser</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s2">"/robots.txt"</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+            <span class="n">rp</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span><span class="p">:</span>
+            <span class="n">rp</span><span class="o">.</span><span class="n">parse</span><span class="p">([])</span>
+        <span class="n">_robots</span><span class="p">[</span><span class="n">base</span><span class="p">]</span> <span class="o">=</span> <span class="n">rp</span>
+    <span class="k">return</span> <span class="n">_robots</span><span class="p">[</span><span class="n">base</span><span class="p">]</span><span class="o">.</span><span class="n">can_fetch</span><span class="p">(</span><span class="n">HEADERS</span><span class="p">[</span><span class="s2">"User-Agent"</span><span class="p">],</span> <span class="n">url</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">crawl</span><span class="p">(</span><span class="n">seed_urls</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_pages</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">max_per_domain</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+          <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">respect_robots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_links_per_page</span><span class="o">=</span><span class="mi">150</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""BFS dari seed. Mengembalikan (pages, edges, errors).</span>
+<span class="sd">    pages : {url: {title, text, depth}}   edges : {(url_sumber, url_tujuan)}"""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed_urls</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">seed_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">seed_urls</span><span class="p">]</span>
+    <span class="n">seeds</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">(</span><span class="n">normalize_url</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">seed_urls</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="p">]</span>
+    <span class="n">pages</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="p">{},</span> <span class="nb">set</span><span class="p">(),</span> <span class="p">{}</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">deque</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">seeds</span><span class="p">))</span>
+    <span class="n">queued</span><span class="p">,</span> <span class="n">per_domain</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">seeds</span><span class="p">),</span> <span class="n">Counter</span><span class="p">(),</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="n">queue</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">pages</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_pages</span> <span class="ow">and</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">time_limit</span><span class="p">:</span>
+        <span class="n">url</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">popleft</span><span class="p">()</span>
+        <span class="n">dom</span> <span class="o">=</span> <span class="n">get_domain</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">per_domain</span><span class="p">[</span><span class="n">dom</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">max_per_domain</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">per_domain</span><span class="p">[</span><span class="n">dom</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">respect_robots</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">allowed_by_robots</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+            <span class="n">errors</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Diblokir robots.txt"</span>
+            <span class="k">continue</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HEADERS</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span> <span class="ow">or</span> <span class="s2">"text/html"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"Content-Type"</span><span class="p">,</span> <span class="s2">""</span><span class="p">):</span>
+                <span class="n">errors</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Status </span><span class="si">{</span><span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">continue</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">errors</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)[:</span><span class="mi">100</span><span class="p">]</span>
+            <span class="k">continue</span>
+
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">"html.parser"</span><span class="p">)</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="n">strip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">soup</span><span class="o">.</span><span class="n">title</span> <span class="k">else</span> <span class="n">url</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">soup</span><span class="p">([</span><span class="s2">"script"</span><span class="p">,</span> <span class="s2">"style"</span><span class="p">,</span> <span class="s2">"noscript"</span><span class="p">]):</span>
+            <span class="n">tag</span><span class="o">.</span><span class="n">decompose</span><span class="p">()</span>
+        <span class="n">pages</span><span class="p">[</span><span class="n">url</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"title"</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span> <span class="s2">"depth"</span><span class="p">:</span> <span class="n">depth</span><span class="p">,</span>
+                      <span class="s2">"text"</span><span class="p">:</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">soup</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="n">strip</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">())[:</span><span class="mi">5000</span><span class="p">]}</span>
+
+        <span class="n">links</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">"a"</span><span class="p">,</span> <span class="n">href</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">normalize_url</span><span class="p">(</span><span class="n">urljoin</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="s2">"href"</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">!=</span> <span class="n">url</span> <span class="ow">and</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+                <span class="n">links</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">links</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">max_links_per_page</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">url</span><span class="p">,</span> <span class="n">t</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">depth</span> <span class="o">&lt;</span> <span class="n">max_depth</span> <span class="ow">and</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">queued</span><span class="p">:</span>
+                <span class="n">queued</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">t</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pages</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">errors</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="eksekusi-crawling-pada-website-target">
+<h2>4. Eksekusi Crawling pada Website Target<a class="headerlink" href="#eksekusi-crawling-pada-website-target" title="Link to this heading">#</a></h2>
+<p>Isi <strong>link website</strong> dan <strong>judul paper</strong> di bawah. Link menjadi titik awal crawling; judul paper dipakai untuk menghitung
+skor relevansi tiap website pada tahap analisis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SEED_URL</span> <span class="o">=</span> <span class="s2">"https://en.wikipedia.org/wiki/PageRank"</span>
+<span class="n">PAPER_TITLE</span> <span class="o">=</span> <span class="s2">"PageRank Algorithm for Web Crawling and Link Structure Analysis"</span>
+
+<span class="n">MAX_DEPTH</span><span class="p">,</span> <span class="n">MAX_PAGES</span><span class="p">,</span> <span class="n">MAX_PER_DOMAIN</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">5</span>
+<span class="n">DELAY</span><span class="p">,</span> <span class="n">TIME_LIMIT</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">60</span>
+<span class="n">DAMPING</span> <span class="o">=</span> <span class="mf">0.85</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">pages</span><span class="p">,</span> <span class="n">page_edges</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">crawl</span><span class="p">(</span><span class="n">SEED_URL</span><span class="p">,</span> <span class="n">MAX_DEPTH</span><span class="p">,</span> <span class="n">MAX_PAGES</span><span class="p">,</span> <span class="n">MAX_PER_DOMAIN</span><span class="p">,</span> <span class="n">DELAY</span><span class="p">,</span> <span class="n">TIME_LIMIT</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Crawling selesai dalam </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> detik"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Halaman berhasil di-crawl : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">pages</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Tautan antarhalaman       : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">page_edges</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Halaman gagal/dilewati    : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Crawling selesai dalam 62 detik
+Halaman berhasil di-crawl : 17
+Tautan antarhalaman       : 2222
+Halaman gagal/dilewati    : 1
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cadangan agar notebook tetap bisa dijalankan tanpa internet (mis. saat build otomatis).</span>
+<span class="c1"># Data di bawah adalah DATA CONTOH, bukan hasil crawling sungguhan, dan ditandai DEMO = True.</span>
+<span class="n">DEMO</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">page_edges</span><span class="p">:</span>
+    <span class="n">DEMO</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"PERINGATAN: crawling tidak menghasilkan data (tidak ada koneksi / situs menolak)."</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Notebook memakai DATA CONTOH agar sel berikutnya tetap berjalan. Jalankan ulang dengan internet untuk hasil asli."</span><span class="p">)</span>
+    <span class="n">demo</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"kampus.ac.id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"fakultas.kampus.ac.id"</span><span class="p">,</span> <span class="s2">"jurnal.kampus.ac.id"</span><span class="p">,</span> <span class="s2">"google.com"</span><span class="p">,</span> <span class="s2">"youtube.com"</span><span class="p">,</span> <span class="s2">"github.com"</span><span class="p">],</span>
+        <span class="s2">"fakultas.kampus.ac.id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"kampus.ac.id"</span><span class="p">,</span> <span class="s2">"jurnal.kampus.ac.id"</span><span class="p">,</span> <span class="s2">"google.com"</span><span class="p">],</span>
+        <span class="s2">"jurnal.kampus.ac.id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"kampus.ac.id"</span><span class="p">,</span> <span class="s2">"doi.org"</span><span class="p">,</span> <span class="s2">"scholar.google.com"</span><span class="p">,</span> <span class="s2">"google.com"</span><span class="p">],</span>
+        <span class="s2">"doi.org"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"crossref.org"</span><span class="p">],</span>
+        <span class="s2">"scholar.google.com"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"google.com"</span><span class="p">],</span>
+        <span class="s2">"google.com"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"youtube.com"</span><span class="p">],</span>
+        <span class="s2">"youtube.com"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"google.com"</span><span class="p">],</span>
+        <span class="s2">"github.com"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"google.com"</span><span class="p">,</span> <span class="s2">"docs.github.com"</span><span class="p">],</span>
+        <span class="s2">"docs.github.com"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"github.com"</span><span class="p">],</span>
+        <span class="s2">"crossref.org"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"doi.org"</span><span class="p">],</span>
+    <span class="p">}</span>
+    <span class="n">SEED_URL</span> <span class="o">=</span> <span class="s2">"https://kampus.ac.id/"</span>
+    <span class="n">page_edges</span> <span class="o">=</span> <span class="p">{(</span><span class="sa">f</span><span class="s2">"https://</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">/"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"https://</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2">/p</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">demo</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ds</span><span class="p">)}</span>
+    <span class="n">pages</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">"https://</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">/"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"title"</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span> <span class="s2">"depth"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                               <span class="s2">"text"</span><span class="p">:</span> <span class="s2">"sistem informasi geografis data stunting balita web"</span> <span class="k">if</span> <span class="s2">"jurnal"</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">else</span> <span class="s2">"beranda website"</span><span class="p">}</span>
+             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">demo</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Mode data:"</span><span class="p">,</span> <span class="s2">"DEMO (data contoh)"</span> <span class="k">if</span> <span class="n">DEMO</span> <span class="k">else</span> <span class="s2">"crawling sungguhan"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mode data: crawling sungguhan
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">page_edges</span><span class="p">)[:</span><span class="mi">10</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Halaman sumber"</span><span class="p">,</span> <span class="s2">"Halaman tujuan"</span><span class="p">])</span>
+<span class="n">display</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Halaman sumber</th>
+      <th>Halaman tujuan</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>http://www.google.com/press/funfacts.html</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>http://www.tahatek.com/suchmaschinenoptimierun...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>https://ar.wikipedia.org/w/index.php?title=%D8...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>https://ar.wikipedia.org/w/index.php?title=%D8...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>https://ar.wikipedia.org/w/index.php?title=%D8...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>https://ar.wikipedia.org/w/index.php?title=%D8...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>https://ar.wikipedia.org/w/index.php?title=%D8...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>https://ar.wikipedia.org/w/index.php?title=%D8...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>https://ar.wikipedia.org/w/index.php?title=%D8...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D8%...</td>
+      <td>https://ar.wikipedia.org/w/index.php?title=%D8...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="pemodelan-topologi-graf-terarah-directed-graph">
+<h2>5. Pemodelan Topologi Graf Terarah (<em>Directed Graph</em>)<a class="headerlink" href="#pemodelan-topologi-graf-terarah-directed-graph" title="Link to this heading">#</a></h2>
+<p>Tautan level halaman digabung menjadi tautan level <strong>website (domain)</strong>. Bobot sisi <span class="math notranslate nohighlight">\(w_{ji}\)</span> adalah jumlah tautan dari website <span class="math notranslate nohighlight">\(j\)</span>
+ke website <span class="math notranslate nohighlight">\(i\)</span>. Tautan ke website sendiri (<em>self-loop</em>) dibuang karena tidak menunjukkan pengaruh antarwebsite.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">aggregate_to_domain</span><span class="p">(</span><span class="n">page_edges</span><span class="p">):</span>
+    <span class="n">agg</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span> <span class="ow">in</span> <span class="n">page_edges</span><span class="p">:</span>
+        <span class="n">s</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">get_domain</span><span class="p">(</span><span class="n">src</span><span class="p">),</span> <span class="n">get_domain</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="n">d</span><span class="p">:</span>
+            <span class="n">agg</span><span class="p">[(</span><span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">agg</span>
+
+<span class="n">edges</span> <span class="o">=</span> <span class="n">aggregate_to_domain</span><span class="p">(</span><span class="n">page_edges</span><span class="p">)</span>        <span class="c1"># {(website_asal, website_tujuan): bobot}</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">edges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">w</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jumlah simpul (website) : </span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jumlah sisi (tautan)    : </span><span class="si">{</span><span class="n">G</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Kepadatan graf          : </span><span class="si">{</span><span class="n">nx</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Simpul tanpa tautan keluar (dangling): </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">G</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">G</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">edge_df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([(</span><span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">edges</span><span class="o">.</span><span class="n">items</span><span class="p">()],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Sumber"</span><span class="p">,</span> <span class="s2">"Tujuan"</span><span class="p">,</span> <span class="s2">"Bobot"</span><span class="p">])</span>
+             <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"Bobot"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">edge_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah simpul (website) : 190
+Jumlah sisi (tautan)    : 805
+Kepadatan graf          : 0.0224
+Simpul tanpa tautan keluar (dangling): 176
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Sumber</th>
+      <th>Tujuan</th>
+      <th>Bobot</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>eu.wikipedia.org</td>
+      <td>en.wikipedia.org</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>bn.wikipedia.org</td>
+      <td>foundation.wikimedia.org</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>es.wikipedia.org</td>
+      <td>foundation.wikimedia.org</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ar.wikipedia.org</td>
+      <td>web.archive.org</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>da.wikipedia.org</td>
+      <td>foundation.wikimedia.org</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>eu.wikipedia.org</td>
+      <td>foundation.wikimedia.org</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>donate.wikimedia.org</td>
+      <td>foundation.wikimedia.org</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>az.wikipedia.org</td>
+      <td>foundation.wikimedia.org</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>el.wikipedia.org</td>
+      <td>foundation.wikimedia.org</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>en.wikipedia.org</td>
+      <td>wikidata.org</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="implementasi-algoritma-pagerank-from-scratch-power-iteration">
+<h2>6. Implementasi Algoritma PageRank <em>From Scratch</em> (Power Iteration)<a class="headerlink" href="#implementasi-algoritma-pagerank-from-scratch-power-iteration" title="Link to this heading">#</a></h2>
+<p>Algoritma dibuat sendiri tanpa memanggil <code class="docutils literal notranslate"><span class="pre">nx.pagerank</span></code>. Langkahnya:</p>
+<ol class="arabic simple">
+<li><p>Semua simpul diberi skor awal <span class="math notranslate nohighlight">\(1/N\)</span>.</p></li>
+<li><p>Tiap iterasi, setiap simpul membagi skornya ke tetangga tujuan sebanding bobot tautan.</p></li>
+<li><p>Skor simpul <em>dangling</em> dibagi rata ke seluruh simpul, lalu ditambah komponen lompatan acak <span class="math notranslate nohighlight">\((1-d)/N\)</span>.</p></li>
+<li><p>Ulangi sampai jumlah selisih mutlak antariterasi (norma L1) di bawah toleransi.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">pagerank_scratch</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">weighted</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">n</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">e</span><span class="p">})</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nodes</span><span class="p">)}</span>
+
+    <span class="n">src</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">idx</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">])</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">idx</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">])</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">edges</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="k">if</span> <span class="n">weighted</span> <span class="k">else</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">out_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>      <span class="c1"># total bobot keluar tiap simpul</span>
+    <span class="n">trans</span> <span class="o">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">out_sum</span><span class="p">[</span><span class="n">src</span><span class="p">]</span>                                 <span class="c1"># peluang berpindah j -&gt; i</span>
+    <span class="n">dangling</span> <span class="o">=</span> <span class="n">out_sum</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="n">pr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">inflow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">pr</span><span class="p">[</span><span class="n">src</span><span class="p">]</span> <span class="o">*</span> <span class="n">trans</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="n">damping</span> <span class="o">*</span> <span class="p">(</span><span class="n">inflow</span> <span class="o">+</span> <span class="n">pr</span><span class="p">[</span><span class="n">dangling</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">damping</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">new</span> <span class="o">-</span> <span class="n">pr</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+        <span class="n">pr</span> <span class="o">=</span> <span class="n">new</span>
+        <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="nb">float</span><span class="p">(</span><span class="n">pr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)},</span> <span class="n">history</span>
+
+<span class="n">scores</span><span class="p">,</span> <span class="n">history</span> <span class="o">=</span> <span class="n">pagerank_scratch</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">damping</span><span class="o">=</span><span class="n">DAMPING</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Konvergen dalam </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">)</span><span class="si">}</span><span class="s2"> iterasi"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Jumlah seluruh skor PageRank = </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">scores</span><span class="o">.</span><span class="n">values</span><span class="p">())</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">  (harus 1)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Konvergen dalam 11 iterasi
+Jumlah seluruh skor PageRank = 1.000000  (harus 1)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">history</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">history</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#2dd4bf"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Iterasi"</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Selisih L1 (skala log)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Konvergensi Power Iteration"</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/134859c89e80c40fa5b0fe144147cc046d5e098ad27bbb106a6845587fb01914.png" src="_images/134859c89e80c40fa5b0fe144147cc046d5e098ad27bbb106a6845587fb01914.png" />
+</div>
+</div>
+</section>
+<section id="validasi-dan-komparasi-dengan-networkx">
+<h2>7. Validasi dan Komparasi dengan NetworkX<a class="headerlink" href="#validasi-dan-komparasi-dengan-networkx" title="Link to this heading">#</a></h2>
+<p>Hasil implementasi sendiri dibandingkan dengan <code class="docutils literal notranslate"><span class="pre">networkx.pagerank</span></code> memakai parameter yang sama
+(damping dan bobot sisi). Selisih yang sangat kecil menunjukkan implementasi sudah benar.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nx_scores</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">pagerank</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">DAMPING</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">"weight"</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="n">compare</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"Scratch"</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span> <span class="s2">"NetworkX"</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">nx_scores</span><span class="p">)})</span>
+<span class="n">compare</span><span class="p">[</span><span class="s2">"Selisih"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">compare</span><span class="p">[</span><span class="s2">"Scratch"</span><span class="p">]</span> <span class="o">-</span> <span class="n">compare</span><span class="p">[</span><span class="s2">"NetworkX"</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+<span class="n">compare</span> <span class="o">=</span> <span class="n">compare</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"Scratch"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">compare</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="n">max_diff</span> <span class="o">=</span> <span class="n">compare</span><span class="p">[</span><span class="s2">"Selisih"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Selisih maksimum  : </span><span class="si">{</span><span class="n">max_diff</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Urutan 10 teratas sama:"</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">compare</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span> <span class="o">==</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nx_scores</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">nx_scores</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">])</span>
+<span class="k">assert</span> <span class="n">max_diff</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s2">"Implementasi menyimpang dari NetworkX"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Scratch</th>
+      <th>NetworkX</th>
+      <th>Selisih</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>foundation.wikimedia.org</th>
+      <td>0.00977</td>
+      <td>0.00977</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>en.wikipedia.org</th>
+      <td>0.00769</td>
+      <td>0.00769</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>commons.wikimedia.org</th>
+      <td>0.00649</td>
+      <td>0.00649</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>mediawiki.org</th>
+      <td>0.00640</td>
+      <td>0.00640</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>wikidata.org</th>
+      <td>0.00635</td>
+      <td>0.00635</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>web.archive.org</th>
+      <td>0.00633</td>
+      <td>0.00633</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>donate.wikimedia.org</th>
+      <td>0.00602</td>
+      <td>0.00602</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>id.wikipedia.org</th>
+      <td>0.00599</td>
+      <td>0.00599</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>ko.wikipedia.org</th>
+      <td>0.00599</td>
+      <td>0.00599</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>kk.wikipedia.org</th>
+      <td>0.00599</td>
+      <td>0.00599</td>
+      <td>0.00000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Selisih maksimum  : 1.73e-17
+Urutan 10 teratas sama: False
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualisasi-graf-jaringan-web">
+<h2>8. Visualisasi Graf Jaringan Web<a class="headerlink" href="#visualisasi-graf-jaringan-web" title="Link to this heading">#</a></h2>
+<p>Ukuran dan warna simpul mengikuti PageRank (biru-hijau = rendah, kuning = tinggi). Website awal diberi warna koral.
+Ketebalan garis menunjukkan jumlah tautan, dan panah menunjukkan arah tautan.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">draw_graph</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">seed_domain</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">8</span><span class="p">)):</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">scores</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">top_n</span><span class="p">]</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">top</span><span class="p">)</span> <span class="o">|</span> <span class="p">({</span><span class="n">seed_domain</span><span class="p">}</span> <span class="k">if</span> <span class="n">seed_domain</span> <span class="ow">in</span> <span class="n">G</span> <span class="k">else</span> <span class="nb">set</span><span class="p">())</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">keep</span><span class="p">)</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">scores</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">nodes</span><span class="p">])</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">vals</span> <span class="o">-</span> <span class="n">vals</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">vals</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">vals</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1e-12</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">**</span> <span class="mf">0.6</span>
+
+    <span class="c1"># warna sedikit lebih tua agar jelas di latar putih</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="s2">"aurora_light"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"#0ea5e9"</span><span class="p">,</span> <span class="s2">"#14b8a6"</span><span class="p">,</span> <span class="s2">"#84cc16"</span><span class="p">,</span> <span class="s2">"#f59e0b"</span><span class="p">])</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">cmap</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">t</span><span class="p">]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"#f43f5e"</span> <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="n">seed_domain</span> <span class="k">else</span> <span class="n">c</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">colors</span><span class="p">)]</span>
+    <span class="n">sizes</span> <span class="o">=</span> <span class="mi">250</span> <span class="o">+</span> <span class="mi">2600</span> <span class="o">*</span> <span class="n">t</span>
+    <span class="n">widths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="mf">0.6</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">][</span><span class="s2">"weight"</span><span class="p">]),</span> <span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">edges</span><span class="p">]</span>
+
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">1.2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">),</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s2">"white"</span><span class="p">)</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_edges</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">widths</span><span class="p">,</span> <span class="n">edge_color</span><span class="o">=</span><span class="s2">"#64748b"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.45</span><span class="p">,</span>
+                           <span class="n">arrows</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">arrowsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">connectionstyle</span><span class="o">=</span><span class="s2">"arc3,rad=0.08"</span><span class="p">,</span>
+                           <span class="n">node_size</span><span class="o">=</span><span class="n">sizes</span><span class="p">)</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_nodes</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="n">sizes</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+                           <span class="n">edgecolors</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="p">(</span><span class="n">n</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">24</span> <span class="k">else</span> <span class="n">n</span><span class="p">[:</span><span class="mi">21</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">nodes</span><span class="p">}</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw_networkx_labels</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">font_color</span><span class="o">=</span><span class="s2">"#1e293b"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Graf Keterhubungan Website (top </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">H</span><span class="p">)</span><span class="si">}</span><span class="s2"> berdasarkan PageRank)"</span><span class="p">,</span>
+                 <span class="n">color</span><span class="o">=</span><span class="s2">"#1e293b"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">seed_domain</span> <span class="o">=</span> <span class="n">get_domain</span><span class="p">(</span><span class="n">SEED_URL</span><span class="p">)</span>
+<span class="n">draw_graph</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">seed_domain</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/4ce73df0f4f5a20968cd7aa9973356b849cfba9e35dadc128e843d1db8dffeab.png" src="_images/4ce73df0f4f5a20968cd7aa9973356b849cfba9e35dadc128e843d1db8dffeab.png" />
+</div>
+</div>
+</section>
+<section id="analisis-hasil-peringkat-website-terpenting">
+<h2>9. Analisis Hasil &amp; Peringkat Website Terpenting<a class="headerlink" href="#analisis-hasil-peringkat-website-terpenting" title="Link to this heading">#</a></h2>
+<p>Tabel peringkat memuat skor PageRank, jumlah tautan masuk/keluar, dan <strong>skor relevansi judul paper</strong>
+(proporsi kata kunci judul yang muncul pada teks halaman website tersebut).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">STOPWORDS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"the"</span><span class="p">,</span> <span class="s2">"of"</span><span class="p">,</span> <span class="s2">"and"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"an"</span><span class="p">,</span> <span class="s2">"in"</span><span class="p">,</span> <span class="s2">"on"</span><span class="p">,</span> <span class="s2">"for"</span><span class="p">,</span> <span class="s2">"to"</span><span class="p">,</span> <span class="s2">"with"</span><span class="p">,</span> <span class="s2">"by"</span><span class="p">,</span> <span class="s2">"using"</span><span class="p">,</span> <span class="s2">"based"</span><span class="p">,</span>
+             <span class="s2">"yang"</span><span class="p">,</span> <span class="s2">"dan"</span><span class="p">,</span> <span class="s2">"di"</span><span class="p">,</span> <span class="s2">"ke"</span><span class="p">,</span> <span class="s2">"dari"</span><span class="p">,</span> <span class="s2">"untuk"</span><span class="p">,</span> <span class="s2">"pada"</span><span class="p">,</span> <span class="s2">"dengan"</span><span class="p">,</span> <span class="s2">"atau"</span><span class="p">,</span> <span class="s2">"sebuah"</span><span class="p">,</span> <span class="s2">"analisis"</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tokens</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[a-zA-Z0-9]+"</span><span class="p">,</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">STOPWORDS</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">}</span>
+
+<span class="n">domain_text</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">url</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="n">pages</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">domain_text</span><span class="p">[</span><span class="n">get_domain</span><span class="p">(</span><span class="n">url</span><span class="p">)]</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">" </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">'title'</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">'text'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">(</span><span class="n">PAPER_TITLE</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">relevance</span><span class="p">(</span><span class="n">domain</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">query</span> <span class="ow">or</span> <span class="n">domain</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">domain_text</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">query</span> <span class="o">&amp;</span> <span class="n">tokens</span><span class="p">(</span><span class="n">domain_text</span><span class="p">[</span><span class="n">domain</span><span class="p">]))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">crawled</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">get_domain</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">pages</span><span class="p">)</span>
+<span class="n">ranking</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"Website"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span>
+    <span class="s2">"PageRank"</span><span class="p">:</span> <span class="p">[</span><span class="n">scores</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">],</span>
+    <span class="s2">"Tautan masuk"</span><span class="p">:</span> <span class="p">[</span><span class="n">G</span><span class="o">.</span><span class="n">in_degree</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">],</span>
+    <span class="s2">"Tautan keluar"</span><span class="p">:</span> <span class="p">[</span><span class="n">G</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">],</span>
+    <span class="s2">"Halaman di-crawl"</span><span class="p">:</span> <span class="p">[</span><span class="n">crawled</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">],</span>
+    <span class="s2">"Relevansi judul"</span><span class="p">:</span> <span class="p">[</span><span class="n">relevance</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">],</span>
+<span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"PageRank"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ranking</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">ranking</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"Peringkat"</span>
+<span class="n">display</span><span class="p">(</span><span class="n">ranking</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Website</th>
+      <th>PageRank</th>
+      <th>Tautan masuk</th>
+      <th>Tautan keluar</th>
+      <th>Halaman di-crawl</th>
+      <th>Relevansi judul</th>
+    </tr>
+    <tr>
+      <th>Peringkat</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>foundation.wikimedia.org</td>
+      <td>0.00977</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>en.wikipedia.org</td>
+      <td>0.00769</td>
+      <td>13</td>
+      <td>157</td>
+      <td>4</td>
+      <td>0.85700</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>commons.wikimedia.org</td>
+      <td>0.00649</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>mediawiki.org</td>
+      <td>0.00640</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>wikidata.org</td>
+      <td>0.00635</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>web.archive.org</td>
+      <td>0.00633</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>donate.wikimedia.org</td>
+      <td>0.00602</td>
+      <td>13</td>
+      <td>7</td>
+      <td>1</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>id.wikipedia.org</td>
+      <td>0.00599</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>ko.wikipedia.org</td>
+      <td>0.00599</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>kk.wikipedia.org</td>
+      <td>0.00599</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>uk.wikipedia.org</td>
+      <td>0.00599</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>hi.wikipedia.org</td>
+      <td>0.00599</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>fi.wikipedia.org</td>
+      <td>0.00599</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>nl.wikipedia.org</td>
+      <td>0.00599</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>ja.wikipedia.org</td>
+      <td>0.00599</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top10</span> <span class="o">=</span> <span class="n">ranking</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">top10</span><span class="p">[</span><span class="s2">"Website"</span><span class="p">],</span> <span class="n">top10</span><span class="p">[</span><span class="s2">"PageRank"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#2dd4bf"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Skor PageRank"</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"10 Website dengan PageRank Tertinggi"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.3</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/a9061174d7e5f4d4ac46d4502c4dc4d031ed31ba28a6708c83114049fb4c541a.png" src="_images/a9061174d7e5f4d4ac46d4502c4dc4d031ed31ba28a6708c83114049fb4c541a.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">best</span> <span class="o">=</span> <span class="n">ranking</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Mode data       :"</span><span class="p">,</span> <span class="s2">"DEMO (data contoh)"</span> <span class="k">if</span> <span class="n">DEMO</span> <span class="k">else</span> <span class="s2">"hasil crawling sungguhan"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Website terpenting: </span><span class="si">{</span><span class="n">best</span><span class="p">[</span><span class="s1">'Website'</span><span class="p">]</span><span class="si">}</span><span class="s2">  (PageRank = </span><span class="si">{</span><span class="n">best</span><span class="p">[</span><span class="s1">'PageRank'</span><span class="p">]</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - tautan masuk dari </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">best</span><span class="p">[</span><span class="s1">'Tautan masuk'</span><span class="p">])</span><span class="si">}</span><span class="s2"> website, tautan keluar ke </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">best</span><span class="p">[</span><span class="s1">'Tautan keluar'</span><span class="p">])</span><span class="si">}</span><span class="s2"> website"</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">query</span><span class="p">:</span>
+    <span class="n">rel</span> <span class="o">=</span> <span class="n">ranking</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">"Relevansi judul"</span><span class="p">])</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"Relevansi judul"</span><span class="p">,</span> <span class="s2">"PageRank"</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">rel</span> <span class="o">=</span> <span class="n">rel</span><span class="p">[</span><span class="n">rel</span><span class="p">[</span><span class="s2">"Relevansi judul"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Website paling relevan dengan judul paper:"</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">rel</span><span class="p">[[</span><span class="s2">"Website"</span><span class="p">,</span> <span class="s2">"Relevansi judul"</span><span class="p">,</span> <span class="s2">"PageRank"</span><span class="p">]]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mode data       : hasil crawling sungguhan
+Website terpenting: foundation.wikimedia.org  (PageRank = 0.00977)
+  - tautan masuk dari 9 website, tautan keluar ke 0 website
+
+Website paling relevan dengan judul paper:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Website</th>
+      <th>Relevansi judul</th>
+      <th>PageRank</th>
+    </tr>
+    <tr>
+      <th>Peringkat</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>en.wikipedia.org</td>
+      <td>0.85700</td>
+      <td>0.00769</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>ar.wikipedia.org</td>
+      <td>0.71400</td>
+      <td>0.00591</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>de.wikipedia.org</td>
+      <td>0.42900</td>
+      <td>0.00586</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>es.wikipedia.org</td>
+      <td>0.28600</td>
+      <td>0.00592</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>eu.wikipedia.org</td>
+      <td>0.28600</td>
+      <td>0.00590</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<section id="kesimpulan">
+<h3>Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h3>
+<p><em>(Tulis kesimpulan dengan kalimat Anda sendiri setelah menjalankan notebook dengan data sungguhan, misalnya: website mana yang
+paling penting, mengapa website itu mendapat PageRank tertinggi (banyak tautan masuk atau dirujuk website penting), dan apakah
+website tersebut relevan dengan judul paper.)</em></p>
+</section>
+</section>
+<section id="persiapan-dan-deployment-aplikasi-interaktif-app-py">
+<h2>10. Persiapan dan Deployment Aplikasi Interaktif (<code class="docutils literal notranslate"><span class="pre">app.py</span></code>)<a class="headerlink" href="#persiapan-dan-deployment-aplikasi-interaktif-app-py" title="Link to this heading">#</a></h2>
+<p>Seluruh alur di atas dikemas menjadi aplikasi web berbasis <strong>Streamlit</strong>: pengguna mengisi link website dan/atau judul paper,
+lalu aplikasi menampilkan graf interaktif, peringkat PageRank, website terkait, dan tombol unduh hasil.</p>
+<p>Struktur berkas aplikasi (folder <code class="docutils literal notranslate"><span class="pre">pagerank_crawler/</span></code>):</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Berkas</p></th>
+<th class="head"><p>Fungsi</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">app.py</span></code></p></td>
+<td><p>Antarmuka dan pengendali alur</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">search.py</span></code></p></td>
+<td><p>Mencari website awal dari judul paper</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">crawler.py</span></code></p></td>
+<td><p>Crawler BFS</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pagerank_utils.py</span></code></p></td>
+<td><p>PageRank, tabel peringkat, relevansi</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">visualizer.py</span></code></p></td>
+<td><p>Graf interaktif (pyvis)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code></p></td>
+<td><p>Daftar dependensi</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.streamlit/config.toml</span></code></p></td>
+<td><p>Tema tampilan</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="cara-menjalankan-aplikasi-di-lokal">
+<h3>Cara Menjalankan Aplikasi di Lokal<a class="headerlink" href="#cara-menjalankan-aplikasi-di-lokal" title="Link to this heading">#</a></h3>
+<p>Windows (PowerShell), dari folder <code class="docutils literal notranslate"><span class="pre">pagerank_crawler</span></code>:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv-crawler</span>
+<span class="p">.\.</span><span class="n">venv-crawler</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">Activate</span><span class="p">.</span><span class="n">ps1</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+<span class="n">python</span> <span class="n">-m</span> <span class="n">streamlit</span> <span class="n">run</span> <span class="n">app</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Aplikasi terbuka di <code class="docutils literal notranslate"><span class="pre">http://localhost:8501</span></code>.</p>
+</section>
+<section id="cara-menjalankan-aplikasi-di-server-warga-laboratorium">
+<h3>Cara Menjalankan Aplikasi di Server Warga Laboratorium<a class="headerlink" href="#cara-menjalankan-aplikasi-di-server-warga-laboratorium" title="Link to this heading">#</a></h3>
+<p>Linux, dari folder <code class="docutils literal notranslate"><span class="pre">pagerank_crawler</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>&lt;alamat-repo-github&gt;
+<span class="nb">cd</span><span class="w"> </span>&lt;nama-repo&gt;/pagerank_crawler
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+nohup<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>streamlit<span class="w"> </span>run<span class="w"> </span>app.py<span class="w"> </span>--server.address<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--server.port<span class="w"> </span><span class="m">8501</span><span class="w"> </span>&gt;<span class="w"> </span>app.log<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>Aplikasi dapat dibuka di <code class="docutils literal notranslate"><span class="pre">http://&lt;IP-server&gt;:8501</span></code>. Hal yang perlu dipastikan dengan admin lab: versi Python 3.9 ke atas,
+server dapat mengakses internet (untuk crawling), port 8501 terbuka, dan, bila ingin berjalan permanen, dijalankan sebagai
+layanan <code class="docutils literal notranslate"><span class="pre">systemd</span></code> atau di dalam <code class="docutils literal notranslate"><span class="pre">tmux</span></code>/<code class="docutils literal notranslate"><span class="pre">screen</span></code>.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Tugas5.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Implementasi Graf Berarah, Tidak Berarah, dan Analisis Metrik</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#landasan-teori-web-structure-mining-algoritma-pagerank">1. Landasan Teori: Web Structure Mining &amp; Algoritma PageRank</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-lingkungan-pustaka">2. Persiapan Lingkungan &amp; Pustaka</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-web-crawler-rekursif-breadth-first-search">3. Implementasi Web Crawler Rekursif (Breadth-First Search)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksekusi-crawling-pada-website-target">4. Eksekusi Crawling pada Website Target</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-topologi-graf-terarah-directed-graph">5. Pemodelan Topologi Graf Terarah (<em>Directed Graph</em>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-algoritma-pagerank-from-scratch-power-iteration">6. Implementasi Algoritma PageRank <em>From Scratch</em> (Power Iteration)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validasi-dan-komparasi-dengan-networkx">7. Validasi dan Komparasi dengan NetworkX</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-graf-jaringan-web">8. Visualisasi Graf Jaringan Web</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-hasil-peringkat-website-terpenting">9. Analisis Hasil &amp; Peringkat Website Terpenting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#persiapan-dan-deployment-aplikasi-interaktif-app-py">10. Persiapan dan Deployment Aplikasi Interaktif (<code class="docutils literal notranslate"><span class="pre">app.py</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-menjalankan-aplikasi-di-lokal">Cara Menjalankan Aplikasi di Lokal</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-menjalankan-aplikasi-di-server-warga-laboratorium">Cara Menjalankan Aplikasi di Server Warga Laboratorium</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Moh. Sifauddin
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
